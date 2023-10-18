@@ -30,6 +30,7 @@ dbConnect()
 
 const brandCollection = client.db('techHubDB').collection('brandCollection');
 const categoryCollection = client.db('techHubDB').collection('categoryCollection');
+const productCollection = client.db('techHubDB').collection('productCollection');
 
 app.get('/', (req, res) => {
     res.send('Server is Running.');
@@ -52,6 +53,11 @@ app.post('/add-brand', async(req, res)=>{
 app.post('/add-category', async(req, res)=>{
     const newCategory = req.body
     const result = await categoryCollection.insertOne(newCategory)
+    res.send(result)
+})
+app.post('/add-product', async(req, res)=>{
+    const newProduct = req.body
+    const result = await productCollection.insertOne(newProduct)
     res.send(result)
 })
 
