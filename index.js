@@ -28,15 +28,19 @@ const dbConnect= async() =>{
 }
 dbConnect()
 
-const techHubCollection = client.db('techHubDB').collection('techHubCollection');
+const brandCollection = client.db('techHubDB').collection('brandCollection');
 
 app.get('/', (req, res) => {
     res.send('Server is Running.');
 });
-
+app.get('/brands', async(req, res)=>{
+    const cursor = brandCollection.find()
+    const result = await cursor.toArray()
+    res.send(result)
+})
 app.post('/add-brand', async(req, res)=>{
     const newBrand = req.body
-    const result = await techHubCollection.insertOne(newBrand)
+    const result = await brandCollection.insertOne(newBrand)
     res.send(result)
 })
 
