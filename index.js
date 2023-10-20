@@ -92,6 +92,14 @@ app.post('/add-product', async(req, res)=>{
     const result = await productCollection.insertOne(newProduct)
     res.send(result)
 })
+app.delete('/delete-product/:id', async(req, res)=>{
+    const id = req.params.id
+    const query = {
+        _id: new ObjectId(id)
+    }
+    const result = await productCollection.deleteOne(query)
+    res.send(result)
+})
 
 app.put('/edit-product/:id', async(req, res)=>{
     const id = req.params.id
@@ -114,8 +122,6 @@ app.put('/edit-product/:id', async(req, res)=>{
             rating: updatedProduct.rating,
         }
     }
-    console.log(value);
-
     const result = await productCollection.updateOne(filter, value, options)
     res.send(result)
 })
