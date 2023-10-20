@@ -42,7 +42,6 @@ app.get('/brands', async(req, res)=>{
 })
 app.get('/brand/:name', async(req, res)=>{
     const name = req.params.name
-    console.log(name);
     const query = {
         brand: name
     }
@@ -57,7 +56,6 @@ app.get('/categories', async(req, res)=>{
 })
 app.get('/category/:name', async(req, res)=>{
     const name = req.params.name
-    console.log(name);
     const query = {
         category: name
     }
@@ -92,6 +90,33 @@ app.post('/add-category', async(req, res)=>{
 app.post('/add-product', async(req, res)=>{
     const newProduct = req.body
     const result = await productCollection.insertOne(newProduct)
+    res.send(result)
+})
+
+app.put('/edit-product/:id', async(req, res)=>{
+    const id = req.params.id
+    const updatedProduct = req.body;
+    
+    const filter = {
+        _id: new ObjectId(id)
+    }
+    const options = {
+        upsert: true
+    }
+    const value = {
+        $set: {
+            name : updatedProduct.name,
+            image : updatedProduct.image,
+            shortdescription : updatedProduct.shortdescription,
+            category: updatedProduct.category,
+            brand: updatedProduct.brand,
+            price: updatedProduct.price,
+            rating: updatedProduct.rating,
+        }
+    }
+    console.log(value);
+
+    const result = await productCollection.updateOne(filter, value, options)
     res.send(result)
 })
 
