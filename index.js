@@ -44,7 +44,7 @@ app.get('/brand/:name', async(req, res)=>{
     const name = req.params.name
     console.log(name);
     const query = {
-        band: name
+        brand: name
     }
     const cursor = productCollection.find(query)
     const result = await cursor.toArray()
@@ -59,6 +59,14 @@ app.get('/categories', async(req, res)=>{
 app.get('/products', async(req, res)=>{
     const cursor = productCollection.find()
     const result = await cursor.toArray()
+    res.send(result)
+})
+app.get('/product/:id', async(req, res)=>{
+    const id = req.params.id
+    const query = {
+        _id: new ObjectId(id)
+    }
+    const result = await productCollection.findOne(query)
     res.send(result)
 })
 app.post('/add-brand', async(req, res)=>{
