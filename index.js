@@ -84,10 +84,18 @@ app.get('/product/:id', async (req, res) => {
 });
 app.get('/cart/:email', async (req, res) => {
     const email = req.params.email;
-    const cursor = userCollection.find(email);
-    const result = await cursor.toArray();
+    const options = {
+        projection: { _id: 0, cart: 1},
+      };
+    const query = {
+        email:email
+    }
+    const cursor = userCollection.find(query, options);
+    const cartProducts = await cursor.toArray();
+    const result = cartProducts[0].cart;
     res.send(result);
 });
+
 app.post('/add-user', async (req, res) => {
     const user = req.body;
     const result = await userCollection.insertOne(user);
@@ -125,7 +133,7 @@ app.put('/add-cart', async (req, res) => {
     };
 
     const values = {
-        $addToSet: {
+        $push: {
             cart: {
                 productName: cart.productName,
                 productImage: cart.productImage,
@@ -139,10 +147,12 @@ app.put('/add-cart', async (req, res) => {
     res.send(result);
 });
 
-app.delete('/delete-cart-item', async (req, res) => {
+app.put('/edit-cart', async (req, res) => {
     const email = req.body.email;
-    const productIdToDelete = req.body.productId; // Assuming you have a unique identifier for the product to delete
 
+    const productName = req.body.productName;
+
+    console.log(req.body);
     const filter = {
         email: email
     };
@@ -150,11 +160,11 @@ app.delete('/delete-cart-item', async (req, res) => {
     const values = {
         $pull: {
             cart: {
-                productId: productIdToDelete // Use the unique identifier for the product to delete
+                productName: productName
             }
         }
     };
-
+    
     const result = await userCollection.updateOne(filter, values);
     res.send(result);
 });
