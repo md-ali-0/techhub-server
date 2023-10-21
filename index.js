@@ -151,8 +151,7 @@ app.put('/edit-cart', async (req, res) => {
     const email = req.body.email;
 
     const productName = req.body.productName;
-
-    console.log(req.body);
+    
     const filter = {
         email: email
     };
